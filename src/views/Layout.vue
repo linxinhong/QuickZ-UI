@@ -1,7 +1,14 @@
 <template>
   <a-layout id="layout-main">
     <a-layout-header :style="{padding: '0 20px'}">
-      <span class="title"><img src="../assets/favicon.png" :style="{height: '1.2em', margin: '5px 5px 8px'}">QuickZ</span>
+      <a-row>
+        <a-col :span=12>
+          <span class="title"><img src="../assets/favicon.png" :style="{height: '1.2em', margin: '5px 5px 8px'}">QuickZ</span>
+        </a-col>
+        <a-col :span=12 id="layout-button">
+          <a-button type="primary">保存</a-button>
+        </a-col>
+      </a-row>
     </a-layout-header>
     <a-layout>
       <a-layout-sider width="200" style="background: #fff">
@@ -59,5 +66,10 @@ import MenuList from '../components/MenuList'
     margin: 16px 28px 16px 0;
     padding: 0px;
     float: left;
+  }
+
+  #layout-button {
+    text-align: right;
+    padding: 0px 20px;
   }
 </style>
