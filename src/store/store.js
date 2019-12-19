@@ -1,13 +1,14 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { replaceIcon, walk_by_mark, } from './utils'
+import { replaceIcon, walk_by_mark, copyItem, } from './utils'
 
 Vue.use(Vuex)
 
 const store = new Vuex.Store({
     state: {
         menuz: {},
-        menuz_select_item: ''
+        menuz_select_item: '',
+        menuz_select_pos: ''
     },
     getters: {
         menuz_with_icon: state => {
@@ -16,21 +17,18 @@ const store = new Vuex.Store({
                 newMenu.push(replaceIcon(item))
             });
             return newMenu
-        },
-        menuz_item_by_mark (state) {
-            return walk_by_mark(state.menuz, state.menuz_select_item)
-        },
+        }
     },
     mutations: {
         loadconfig (state, config) {
             state.menuz = config.menuz
         },
         menuz_select_item_mark (state, keyIndex) {
-            state.menuz_select_item = keyIndex
+            state.menuz_select_pos = keyIndex
+            state.menuz_select_item = walk_by_mark(state.menuz, state.menuz_select_pos)
         },
         menuz_select_item_update (state, itemObject) {
-            window.console.log(state)
-            window.console.log(itemObject)
+            copyItem(itemObject, state.menuz_select_item)
         }
     }
 })

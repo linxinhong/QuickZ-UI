@@ -10,7 +10,7 @@
                 <a-col :span="14" >
                     <a-input v-model="itemName">
                         <span class="ant-input-group-addon" slot="addonBefore" :style="{'padding': '0px', border: '0px'}" >
-                            <img width="16px" height="16px"  :src="itemIcon"> 
+                            <img width="16px" height="16px"  :src="getIcon"> 
                         </span>
                     </a-input>
                 </a-col>
@@ -29,7 +29,7 @@
             label="筛选器"
             :style="{'margin-bottom': '16px', 'margin-right': '30px'}"
         >
-            <a-input />
+            <a-input v-model="itemFilter" />
         </a-form-item>
         <a-form-item
             :label-col="formItemLayout.labelCol"
@@ -51,9 +51,10 @@
             :style="{'margin-bottom': '16px', 'margin-right': '30px', 'text-align': 'right'}"
         >
             <a-button type="primary" @click="onSave">
-                保存{{menuz_select_item}}
+                保存
             </a-button>
         </a-form-item>
+        {{menuz_select_item}}
     </a-form>
 </template>
 
@@ -69,7 +70,7 @@ export default {
             formItemLayout,
             itemIcon: '',
             itemName: '',
-            itemFilter: {},
+            itemFilter: '',
             itemExec: '',
             itemParam: ''
         }
@@ -79,23 +80,30 @@ export default {
             this.loadItem()
             return ''
         },
+        getIcon: function() {
+            return getIconFromString(this.itemIcon)
+        }
     },
     methods: {
         loadItem: function() {
-            let select_item = this.$store.getters.menuz_item_by_mark
-            if (typeof(select_item) === 'object') {
-                this.itemName = select_item.hasOwnProperty('name') ? select_item.name : ''
-                this.itemIcon = select_item.hasOwnProperty('icon') ? getIconFromString(select_item.icon) : ''
-                this.itemFilter = select_item.hasOwnProperty('filter') ? select_item.filter : ''
-                this.itemExec = select_item.hasOwnProperty('exec') ? select_item.exec : ''
-                this.itemParam = select_item.hasOwnProperty('param') ? select_item.param : ''
-            }
+            let select_item = this.$store.state.menuz_select_item
+            this.itemName = select_item.hasOwnProperty('name') ? select_item.name : ''
+            this.itemIcon = select_item.hasOwnProperty('icon') ? select_item.icon : ''
+            this.itemFilter = select_item.hasOwnProperty('filter') ? select_item.filter : ''
+            this.itemExec = select_item.hasOwnProperty('exec') ? select_item.exec : ''
+            this.itemParam = select_item.hasOwnProperty('param') ? select_item.param : ''
         },
         update: function () {
             window.console.log()
         },
         onSave: function () {
-
+            this.$store.commit('menuz_select_item_update', {
+                name: this.itemName,
+                icon: this.itemIcon,
+                filter: this.itemFilter,
+                exec: this.itemExec,
+                param: this.itemParam
+            })
         }
     } 
 }

@@ -4,16 +4,18 @@ import api from './api'
 function walk_by_mark(menu, mark) {
     let mark_string = '' + mark[0]
     let list = mark_string.split('-')
-    let pm = [menu]
-    list.forEach(pos => {
-        if (pm.hasOwnProperty('sub')) {
-            pm = pm.sub[pos]
-        }
-        else {
-            pm = pm[pos]
-        }
-    })
-    return pm
+    if (mark.length > 0) {
+        let pm = [menu]
+        list.forEach(pos => {
+            if (pm.hasOwnProperty('sub')) {
+                pm = pm.sub[pos]
+            }
+            else {
+                pm = pm[pos]
+            }
+        })
+        return pm
+    }
 }
 
 function getIconFromString(iconString) {
@@ -31,9 +33,8 @@ function getIconFromString(iconString) {
     return api.generateicon + '?' + params
 }
 
-function Item_copy(item) {
-    let newItem = {}
-    let list = ['name', 'icon']
+function copyItem (item, newItem) {
+    let list = ['name', 'icon', 'filter', 'exec', 'param']
     list.forEach(key=> {
         newItem[key] = item[key]
     })
@@ -43,12 +44,12 @@ function Item_copy(item) {
             newItem['sub'].push(replaceIcon(subitem))
         })
     }
-    return newItem
 }
 
 function replaceIcon(item) {
     let iconurl = ''
-    let newItem = Item_copy(item)
+    let newItem = {}
+    copyItem (item, newItem)
     if (item.hasOwnProperty('icon')) {
         iconurl = getIconFromString(item.icon)
     }
@@ -68,5 +69,5 @@ export {
     replaceIcon,
     walk_by_mark,
     getIconFromString,
-    Item_copy,
+    copyItem,
 }
