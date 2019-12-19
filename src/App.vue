@@ -9,38 +9,33 @@
             </span>
           </a-col>
           <a-col :span="12" id="layout-button">
-            <a-button type="primary">保存</a-button>
+            <a-button type="primary" icon="save">应用</a-button>
           </a-col>
         </a-row>
       </a-layout-header>
       <a-layout>
-        <a-layout-sider width="200" style="background: #fff">
+        <a-layout-sider width="140" style="background: #fff">
           <a-menu
             mode="inline"
             :defaultSelectedKeys="['1']"
             :defaultOpenKeys="['sub1']"
             :style="{ height: '100%', borderRight: 0 }"
+            @click="onclick"
           >
-            <a-menu-item key="1">
-              <a-icon type="profile" />智能菜单
-            </a-menu-item>
-            <a-menu-item key="2">
-              <a-icon type="down-square" />Vim热键
-            </a-menu-item>
-            <a-menu-item key="3">
-              <a-icon type="thunderbolt" />变量
-            </a-menu-item>
-            <a-menu-item key="4">
-              <a-icon type="tags" />标签
-            </a-menu-item>
-            <a-menu-item key="5">
-              <a-icon type="setting" />全局设置
-            </a-menu-item>
+          <template v-for="item in navmenu">
+            <template v-if="item.path" >
+                <a-menu-item :key="item.path">
+                    <a-icon :type="item.icon" v-if="typeof(item.icon) === 'string' "/>
+                    <a-icon :component="item.icon" v-if="typeof(item.icon) === 'object' "/>
+                    <span class="nav-text">{{ item.name}}</span>
+                </a-menu-item>
+            </template>
+          </template>
           </a-menu>
         </a-layout-sider>
         <a-layout style="padding: 0px 20px 0px">
           <a-layout-content :style="{ background: '#fff', padding: '24px', Height: '100%;' }">
-            <MenuZ />
+            <router-view></router-view>
           </a-layout-content>
         </a-layout>
       </a-layout>
@@ -49,13 +44,34 @@
 </template>
 
 <script>
-import MenuZ from "./views/Menuz";
+import MouseIcon from './components/MouseIcon';
+import { navmenu } from './router'
+import Axios from 'axios'
 
 export default {
   name: "app",
+  data() {
+    return {
+      MouseIcon,
+      navmenu,
+    }
+  },
+  mounted: async function () {
+    await Axios.get('/api/config').then((resp) => {
+        this.$store.commit('loadconfig', resp.data)
+    }).catch((err) => {
+        window.console.log(err)
+    })
+  },
+  methods: {
+    onclick: function(obj) {
+      this.$router.push({ path: obj.key }).catch( err => {
+        window.console.log(err)
+      })   
+    }
+  },
   components: {
-    MenuZ
-  }
+  },
 };
 </script>
 

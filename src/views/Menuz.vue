@@ -1,16 +1,30 @@
 <template>
-  <div>
-    <a-row>
-      <a-col :span="8">
-        <MenuList />
+  <div id="menuz">
+        <a-button-group>
+          <a-button type="primary" icon="plus">新建菜单</a-button>
+          <a-button>子菜单</a-button>
+          <a-button>分割线</a-button>
+          <!-- <a-button icon="stop">禁用</a-button> -->
+          <!-- <a-button icon="delete" type="danger">删除</a-button> -->
+        </a-button-group>
+        <a-button-group style="padding: 0px 10px 0px">
+          <a-button icon="up">向上</a-button>
+          <a-button icon="down">向下</a-button>
+        </a-button-group>
+    <a-row style="height: 90%">
+      <a-col :span="8" style="height: 100%">
+        <div id="treelist">
+          <MenuList />
+        </div>
       </a-col>
       <a-col :span="16">
-        <quill-editor
+        <ItemSetting />
+        <!-- <quill-editor
           id="editor"
           v-model="editorContext"
           ref="myQuillEditor"
           :options="editorOption"
-        ></quill-editor>
+        ></quill-editor> -->
       </a-col>
     </a-row>
   </div>
@@ -18,6 +32,7 @@
 
 <script>
 import MenuList from "../components/MenuList";
+import ItemSetting from "../components/ItemSetting";
 import hljs from "highlight.js";
 import "highlight.js/styles/monokai-sublime.css";
 
@@ -42,7 +57,8 @@ export default {
     };
   },
   components: {
-    MenuList
+    MenuList,
+    ItemSetting
   }
 };
 </script>
@@ -50,5 +66,17 @@ export default {
 <style>
 #editor {
   height: 500px;
+}
+
+#menuz {
+  height: 100%;
+}
+
+#treelist {
+  padding: 5px;
+  height: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #2222;
 }
 </style>

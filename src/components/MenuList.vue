@@ -1,24 +1,41 @@
 <template>
-  <a-directory-tree multiple defaultExpandAll @select="onSelect" @expand="onExpand">
-    <a-tree-node title="parent 0" key="0-0">
-      <a-tree-node title="leaf 0-0" key="0-0-0" isLeaf />
-      <a-tree-node title="leaf 0-1" key="0-0-1" isLeaf />
-    </a-tree-node>
-    <a-tree-node title="parent 1" key="0-1">
-      <a-tree-node title="leaf 1-0" key="0-1-0" isLeaf />
-      <a-tree-node title="leaf 1-1" key="0-1-1" isLeaf />
-    </a-tree-node>
+  <a-directory-tree
+    @select="onSelect"
+    @expand="onExpand"
+    :multiple="true"
+    :treeData="menuz_with_icon"
+    :replaceFields="replaceFields"
+  >
   </a-directory-tree>
 </template>
 <script>
-  export default {
-    methods: {
-      onSelect(keys) {
-        window.console.log('Trigger Select', keys);
-      },
-      onExpand() {
-        window.console.log('Trigger Expand');
-      },
-    },
-  };
+import { mapState, mapGetters, mapMutations } from 'vuex'
+// import Vue from 'vue'
+
+export default {
+  data() {
+    return {
+      select_node: '',
+      replaceFields: {
+        children: "sub",
+        title: "name",
+      }
+    };
+  },
+  computed: {
+    ...mapState([
+      'menuz'
+    ]),
+    ...mapGetters([
+      'menuz_with_icon'
+    ])
+  },
+  methods: {
+    ...mapMutations({
+      onSelect: 'menuz_select_item_mark'
+    }),
+    onExpand() {
+    }
+  }
+};
 </script>
