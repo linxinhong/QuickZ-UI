@@ -42,9 +42,34 @@ export default {
 
       // 到目标后面
       if (info.dropToGap) {
-        const dragKey = info.dragNodesKeys
-        const dropKey = info.node.eventKey
-        this.$store.commit('menuz_dropToGap', {drag: dragKey, drop: dropKey})
+        const dragPos = info.dragNodesKeys[0].split('-')
+        const dropPos = info.node.pos.split('-')
+        const dropPosition = info.dropPosition - Number(dropPos[dropPos.length - 1]);
+        const process = (data, pos, callback) => {
+                pos.forEach(p => {
+                    if (data[p].hasOwnProperty('sub')) {
+                        data = data[p].sub
+                    }
+                    else {
+                        window.console.log(data, p)
+                        callback(data, p)
+                    }
+                })
+            }
+        let dragObject
+        process([{sub: this.$store.state.menuz}], dragPos, (data, p) => {
+            dragObject = data[p]
+            data.splice(p, 1)
+        })
+        process([{sub: this.$store.state.menuz}], dropPos, (ddata, dp) => {
+            window.console.log(dp)
+            ddata.splice(((dropPosition === -1) ? dp : dp + 1), 0, dragObject)
+        })
+        window.console.log('----')
+        window.console.log(dragPos)
+        window.console.log(dropPos)
+        window.console.log(dropPosition)
+        // this.$store.commit('menuz_dropToGap', {drag: dragKey, drop: dropKey})
       }
       // else {
       //   this.$store.commit('menuz_dropToSub', dragKey, dropKey)
