@@ -8,7 +8,7 @@ import 'quill/dist/quill.snow.css'
 import 'quill/dist/quill.bubble.css'
 import Vuex from 'vuex'
 import { router } from './router'
-import store from './store/store'
+import store from './store'
 
 Vue.config.productionTip = false
 

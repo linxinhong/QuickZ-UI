@@ -10,7 +10,8 @@
                 <a-col :span="14" >
                     <a-input v-model="itemName">
                         <span class="ant-input-group-addon" slot="addonBefore" :style="{'padding': '0px', border: '0px'}" >
-                            <img width="16px" height="16px"  :src="getIcon"> 
+                            <img width="16px" height="16px"  :src="getIcon" v-if="itemIcon"> 
+                            <div :style="{width:'16px', height:'16px'}"  v-else /> 
                         </span>
                     </a-input>
                 </a-col>

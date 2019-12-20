@@ -7,10 +7,6 @@
           <!-- <a-button icon="stop">禁用</a-button> -->
           <!-- <a-button icon="delete" type="danger">删除</a-button> -->
         </a-button-group>
-        <a-button-group style="padding: 0px 10px 0px">
-          <a-button icon="up">向上</a-button>
-          <a-button icon="down">向下</a-button>
-        </a-button-group>
     <a-row style="height: 90%">
       <a-col :span="8" style="height: 100%">
         <div id="treelist">

@@ -9,12 +9,12 @@
             </span>
           </a-col>
           <a-col :span="12" id="layout-button">
-            <a-button type="primary" icon="save">应用</a-button>
+            <a-button type="primary" icon="reload" @click="apply_config">重新加载QuickZ</a-button>
           </a-col>
         </a-row>
       </a-layout-header>
       <a-layout>
-        <a-layout-sider width="140" style="background: #fff">
+        <a-layout-sider width="120" style="background: #fff">
           <a-menu
             mode="inline"
             :defaultSelectedKeys="['1']"
@@ -46,6 +46,7 @@
 <script>
 import MouseIcon from './components/MouseIcon';
 import { navmenu } from './router'
+import api from './store/api'
 import Axios from 'axios'
 
 export default {
@@ -57,7 +58,7 @@ export default {
     }
   },
   mounted: async function () {
-    await Axios.get('/api/config').then((resp) => {
+    await Axios.get(api.config).then((resp) => {
         this.$store.commit('loadconfig', resp.data)
     }).catch((err) => {
         window.console.log(err)
@@ -68,6 +69,16 @@ export default {
       this.$router.push({ path: obj.key }).catch( err => {
         window.console.log(err)
       })   
+    },
+
+    apply_config: async function() {
+      let qzconfig = this.$store.getters.dumpconfig
+      const resp = await Axios({
+        method: 'POST',
+        url: api.config,
+        data: qzconfig
+      })
+      window.console.log(resp.status)
     }
   },
   components: {
@@ -77,7 +88,7 @@ export default {
 
 <style>
 #app {
-  color: #2c3e50;
+  color: rgb(44, 62, 80);
   height: 100%;
 }
 #layout-main {

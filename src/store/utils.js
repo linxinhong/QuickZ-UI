@@ -1,10 +1,28 @@
 import qs from 'qs'
 import api from './api'
+// import _ from 'lodash'
+
+function insert_to(menu, pos, items) {
+    window.console.log(pos)
+    // window.console.log(items)
+    let mark_string = '' + pos
+    let list = mark_string.split('-')
+    let pm = menu
+    let insert_pos = 0
+    window.console.log('0')
+    for (let index = 1; index < list.length; index++) {
+        insert_pos = list[index]
+        window.console.log(insert_pos)
+    }
+    items.forEach(item => {
+        pm.splice(insert_pos, 0, item)
+    })
+}
 
 function walk_by_mark(menu, mark) {
-    let mark_string = '' + mark[0]
+    let mark_string = '' + mark
     let list = mark_string.split('-')
-    if (mark.length > 0) {
+    if (list.length > 0) {
         let pm = [menu]
         list.forEach(pos => {
             if (pm.hasOwnProperty('sub')) {
@@ -49,17 +67,28 @@ function copyItem (item, newItem) {
 function replaceIcon(item) {
     let iconurl = ''
     let newItem = {}
-    copyItem (item, newItem)
+    copyItem(item, newItem)
     if (item.hasOwnProperty('icon')) {
-        iconurl = getIconFromString(item.icon)
+        if (item.icon.length > 0) {
+            iconurl = getIconFromString(item.icon)
+        } 
     }
-    newItem.icon = function (props, h) {
+    newItem.icon = (iconurl.length > 0) ? function (props, h) {
         return h('img', {
             attrs: {
                 width: '16px',
                 height: '16px',
                 src: iconurl
-            }
+            },
+            class: [
+                'anticon',
+            ],
+            style: {
+            },
+        })
+    } : function (props, h) {
+        return h('div', {
+
         })
     }
     return newItem
@@ -70,4 +99,5 @@ export {
     walk_by_mark,
     getIconFromString,
     copyItem,
+    insert_to,
 }

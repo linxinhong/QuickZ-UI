@@ -2,7 +2,8 @@
   <a-directory-tree
     @select="onSelect"
     @expand="onExpand"
-    :multiple="true"
+    draggable
+    @drop="onDrop"
     :treeData="menuz_with_icon"
     :replaceFields="replaceFields"
   >
@@ -34,7 +35,23 @@ export default {
     ...mapMutations({
       onSelect: 'menuz_select_item_mark'
     }),
-    onExpand() {
+
+    onExpand () {
+    },
+    onDrop(info) {
+
+      // 到目标后面
+      if (info.dropToGap) {
+        const dragKey = info.dragNodesKeys
+        const dropKey = info.node.eventKey
+        this.$store.commit('menuz_dropToGap', {drag: dragKey, drop: dropKey})
+      }
+      // else {
+      //   this.$store.commit('menuz_dropToSub', dragKey, dropKey)
+      // }
+    },
+    onDragEnter(info) {
+      window.console.log(info)
     }
   }
 };
