@@ -9,7 +9,10 @@
             </span>
           </a-col>
           <a-col :span="12" id="layout-button">
-            <a-button type="primary" icon="reload" @click="apply_config">重新加载QuickZ</a-button>
+          <a-button-group>
+              <!-- <a-button icon="export" >导出配置</a-button> -->
+              <a-button type="primary" icon="build" @click="apply_config" :style="{ 'background-color': reloadbuttoncolor, 'border-left-color': reloadbuttoncolor, 'border-color': reloadbuttoncolor }">生成配置</a-button>
+          </a-button-group>
           </a-col>
         </a-row>
       </a-layout-header>
@@ -44,7 +47,6 @@
 </template>
 
 <script>
-import MouseIcon from './components/MouseIcon';
 import { navmenu } from './router'
 import api from './store/api'
 import Axios from 'axios'
@@ -53,8 +55,8 @@ export default {
   name: "app",
   data() {
     return {
-      MouseIcon,
       navmenu,
+      reloadbuttoncolor: '#dd6347'
     }
   },
   mounted: async function () {
@@ -111,6 +113,6 @@ export default {
 
 #layout-button {
   text-align: right;
-  padding: 0px 20px;
+  padding: 0px 40px;
 }
 </style>

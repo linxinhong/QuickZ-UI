@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import MouseIcon from './components/MouseIcon';
+import TheMouseIcon from './components/TheMouseIcon';
 
 Vue.use(VueRouter)
 
@@ -19,7 +19,7 @@ const navmenu = [
     },
     {
         name: '手势',
-        icon: MouseIcon,
+        icon: TheMouseIcon,
         path: '/gesturez',
         component: () => import('./views/Menuz.vue') 
     },
