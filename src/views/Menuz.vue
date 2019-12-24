@@ -8,13 +8,13 @@
           <a-button @click="createSep">分割线</a-button>
         </a-button-group>
         <a-button-group :style="{'padding-left': '10px'}">
-          <a-button icon="stop" @click="disableItem">禁用</a-button>
+          <!-- <a-button icon="stop" @click="disableItem">禁用</a-button> -->
           <a-button icon="delete" @click="deleteItem" type="danger">删除</a-button>
         </a-button-group>
       </a-col>
       <a-col :span="8" :style="{heigth: '100%',  'text-align': 'right', 'padding-right': '10px'}">
         <a-button-group v-if="IsShowItemSetting">
-          <a-button icon="undo">还原</a-button>
+          <!-- <a-button icon="undo">还原</a-button> -->
           <a-button icon="save" type="primary" @click="onSave">保存</a-button>
         </a-button-group>
       </a-col>

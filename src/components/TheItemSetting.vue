@@ -16,14 +16,14 @@
                             </span>
                         </a-input>
                     </a-col>
-                    <a-col :span="10" :style="{'padding-left': '20px'}">
+                    <!-- <a-col :span="10" :style="{'padding-left': '20px'}">
                         <a-button-group>
                             <a-button><a-icon type="font-colors" /></a-button>
                             <a-button><a-icon type="bg-colors" /></a-button>
                             <a-button><a-icon type="bold" /></a-button>
                         </a-button-group>
-                    </a-col>
-                </a-row>
+                    </a-col>-->
+                </a-row> 
             </a-form-item>
             <a-form-item
                 :label-col="formItemLayout.labelCol"
