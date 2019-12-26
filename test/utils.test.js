@@ -9,7 +9,7 @@ function walk_by_mark(menu, mark) {
     pos_list.splice(0, 1)
     var pm = menu
     pos_list.forEach(pos => {
-        index = pos > pm.length ? pm.length : pos
+        let index = pos > pm.length ? pm.length : pos
         pm = pm[index]
         if (typeof(pm) === 'object') {
             if (pm.hasOwnProperty('sub')) {

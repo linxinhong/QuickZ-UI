@@ -64,6 +64,27 @@
             width="540"
             >
             <a-input-search v-model="icon_select_value" @pressEnter="icon_select_search"></a-input-search>
+            <a-row>
+            <a-col :span="18" :style="{'margin-top': '10px'}">
+            <a-dropdown :placement="placement" :style="{'width': '140px', 'margin-right': '10px'}">
+                <a-input v-model="icon_fav_dir_name"></a-input>
+                <a-menu slot="overlay">
+                    <a-menu-item v-for="(item, index) in icon_fav_dirs" :key=index>
+                        <a @click="icon_fav_change(item, index)">
+                            {{item.name}}
+                        </a>
+                    </a-menu-item>
+                </a-menu>
+            </a-dropdown>
+            <a-button-group>
+                <a-button @click="icon_fav_add">添加书签</a-button>
+                <a-button @click="icon_fav_delete">删除书签</a-button>
+            </a-button-group>
+            </a-col>
+            <a-col :span="6" :style="{'margin-top': '10px', 'text-align': 'right'}">
+            <a-button type="primary">清除图标</a-button>
+            </a-col>
+            </a-row>
             <ul class="anticons-list">
                 <template v-for="(item, index) in icon_data" >
                 <li :key="index">
@@ -111,6 +132,12 @@ export default {
             icon_select_img: '',
             icon_select_is_fav: false,
             icon_data: [],
+            icon_fav_dir_name: '',
+            icon_fav_dir_pos: 0,
+            icon_fav_dirs: [
+                {name: 'ICON', filepath: 'User\\Icons'},
+                {name: 'Test', filepath: 'User\\IconsTest'}
+            ]
         }
     },
     computed: {
@@ -236,6 +263,26 @@ export default {
                 url: api.savefavicon + '?' + IconStringFormat(item)
             })
         },
+
+        icon_fav_change: function (item, index) {
+            this.icon_fav_dir_pos = index
+            this.icon_fav_dir_name = item.name
+            this.icon_select_value = item.filepath
+        },
+
+        icon_fav_add: function () {
+            this.icon_fav_dirs.splice(this.icon_fav_dirs.length, 0, {name: this.icon_fav_dir_name, filepath: this.icon_select_value})
+        },
+
+        icon_fav_delete: function () {
+            this.icon_fav_dirs.splice(this.icon_fav_dir_pos, 1)
+            const pos = ( this.icon_fav_dir_pos > this.icon_fav_dirs.length ) ? this.icon_fav_dirs.length : this.icon_fav_dir_pos
+            const item = this.icon_fav_dirs[pos]
+            window.console.log(pos)
+            this.icon_fav_dir_pos = pos
+            this.icon_fav_dir_name = item.name
+            this.icon_select_value = item.filepath
+        }
 
     } 
 }
