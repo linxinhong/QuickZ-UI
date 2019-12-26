@@ -66,7 +66,7 @@
             <a-input-search v-model="icon_select_value" @pressEnter="icon_select_search"></a-input-search>
             <a-row>
             <a-col :span="18" :style="{'margin-top': '10px'}">
-            <a-dropdown :placement="placement" :style="{'width': '140px', 'margin-right': '10px'}">
+            <a-dropdown :style="{'width': '140px', 'margin-right': '10px'}">
                 <a-input v-model="icon_fav_dir_name"></a-input>
                 <a-menu slot="overlay">
                     <a-menu-item v-for="(item, index) in icon_fav_dirs" :key=index>
@@ -276,12 +276,16 @@ export default {
 
         icon_fav_delete: function () {
             this.icon_fav_dirs.splice(this.icon_fav_dir_pos, 1)
-            const pos = ( this.icon_fav_dir_pos > this.icon_fav_dirs.length ) ? this.icon_fav_dirs.length : this.icon_fav_dir_pos
-            const item = this.icon_fav_dirs[pos]
-            window.console.log(pos)
-            this.icon_fav_dir_pos = pos
-            this.icon_fav_dir_name = item.name
-            this.icon_select_value = item.filepath
+            if (this.icon_fav_dirs.length > 0) {
+                const pos = ( this.icon_fav_dir_pos > this.icon_fav_dirs.length - 1 ) ? this.icon_fav_dirs.length - 1 : this.icon_fav_dir_pos
+                const item = this.icon_fav_dirs[pos]
+                this.icon_fav_dir_pos = pos
+                this.icon_fav_dir_name = item.name
+                this.icon_select_value = item.filepath
+            }
+            else {
+                this.icon_fav_dir_name = ''
+            }
         }
 
     } 
