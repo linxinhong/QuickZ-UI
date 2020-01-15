@@ -3,17 +3,21 @@
     <a-row>
       <a-col :span="16">
         <a-button-group>
-          <a-button type="primary" icon="plus" @click="createItem">新建菜单</a-button>
-          <a-button @click="createSubItem">子菜单</a-button>
-          <a-button @click="createSep">分割线</a-button>
+          <a-button type="primary" icon="plus" @click="menuz_insert_item">
+            新建菜单
+          </a-button>
+          <a-button @click="menuz_insert_item_before">菜单(之前)</a-button>
+          <a-button @click="menuz_insert_item_sub">子菜单</a-button>
+          <a-button @click="menuz_insert_item_sep">分割线</a-button>
         </a-button-group>
         <a-button-group :style="{'padding-left': '10px'}">
+          <a-button icon="copy" @click="menuz_duplicate_item">复用</a-button>
           <!-- <a-button icon="stop" @click="disableItem">禁用</a-button> -->
-          <a-button icon="delete" @click="deleteItem" type="danger">删除</a-button>
+          <a-button icon="delete" @click="menuz_delete_item" type="danger">删除</a-button>
         </a-button-group>
       </a-col>
       <a-col :span="8" :style="{heigth: '100%',  'text-align': 'right', 'padding-right': '10px'}">
-        <a-button-group v-if="IsShowItemSetting">
+        <a-button-group >
           <!-- <a-button icon="undo">还原</a-button> -->
           <a-button icon="save" type="primary" @click="onSave">保存</a-button>
         </a-button-group>
@@ -26,12 +30,12 @@
             id="treelist"
             @select="onSelect"
             @expand="onExpand"
-            draggable
             @drop="onDrop"
+            draggable
             :expandedKeys="expandedKeys"
-            :treeData="menuz_with_icon"
             :replaceFields="replaceFields"
-            :selectedKeys="select_pos"
+            :treeData="menuz_list_with_icon"
+            :selectedKeys="menuz_list_select_pos"
             expandAction="dblclick"
           ></a-directory-tree>
         </div>
@@ -51,13 +55,12 @@
 
 <script>
 import TheItemSetting from "../components/TheItemSetting";
-import hljs from "highlight.js";
-import "highlight.js/styles/monokai-sublime.css";
-import { mapState, mapGetters, mapMutations } from "vuex";
+// import hljs from "highlight.js";
+// import "highlight.js/styles/monokai-sublime.css";
 
-hljs.configure({
-  languages: ["autohotkey", "json", "yaml", "ini", "markdown"]
-});
+// hljs.configure({
+  // languages: ["autohotkey", "json", "yaml", "ini", "markdown"]
+// });
 
 // data() {
 //   return {
@@ -87,9 +90,16 @@ export default {
       
     };
   },
+
   computed: {
-    ...mapState(["menuz", "menuz_select_pos"]),
-    ...mapGetters(["menuz_with_icon"]),
+    menuz_list_with_icon: function () {
+      return this.$store.getters['menuz/list_with_icon']
+    },
+
+    menuz_list_select_pos: function () {
+      return this.$store.state.menuz.list_select_pos
+    },
+
     IsShowItemSetting: function() {
         if (!this.$store.state.menuz_select_pos) {
             return false
@@ -99,37 +109,55 @@ export default {
             : true
     },
   },
+
   mounted: function () {
   },
+
   methods: {
-    ...mapMutations({
-    }),
 
     onSelect(pos) {
-      this.select_pos = pos
-      this.$store.commit("menuz_select_item_mark", pos[0])
+      this.$store.commit('menuz/change_select_pos', pos)
+      this.$store.dispatch('menuz/change_edit_item')
     },
 
-    createItem() {
-      this.$store.commit("menuz_select_item_insert", {
-          name: "新建菜单"
-      })
-      this.select_pos = [this.$store.state.menuz_select_pos]
+    insert_item(item) {
+      var posList = this.menuz_list_select_pos[0].split('-')
+      posList[posList.length-1] = Number(posList[posList.length-1]) + 1;
+      this.$store.commit('menuz/insert_item', {pos: [posList.join('-')], item})
+      if (this.$store.state.menuz.list.length == 1) {
+        posList = ['0-0']
+      }
+      this.onSelect([posList.join('-')])
     },
 
-    createSep() {
-      this.$store.commit("menuz_select_item_insert", {
-        sep: true
-      })
-      this.select_pos = [this.$store.state.menuz_select_pos]
+    menuz_insert_item() {
+      this.insert_item({name: '新建菜单'})
     },
 
-    createSubItem() {
-      this.$store.commit("menuz_select_item_insert_subitem", {
-          name: "新建子菜单"
-      })
-      this.expandedKeys = [...this.expandedKeys, ...this.select_pos]
-      this.select_pos = [this.$store.state.menuz_select_pos]
+    menuz_insert_item_sep() {
+      this.insert_item({sep: true})
+    },
+
+    menuz_insert_item_before() {
+      this.$store.commit('menuz/insert_item', {pos: this.menuz_list_select_pos, item: {
+        name: '新建菜单'
+      }})
+    },
+
+    menuz_insert_item_sub() {
+      this.expandedKeys = [...this.expandedKeys, ...this.menuz_list_select_pos]
+      this.$store.commit('menuz/insert_item_sub', {pos: this.menuz_list_select_pos, item: {
+        name: '新建子菜单'
+      }})
+    },
+
+    menuz_delete_item() {
+      this.$store.commit('menuz/delete_item', {pos: this.menuz_list_select_pos})
+    },
+
+    menuz_duplicate_item() {
+      const item = this.$store.getters['menuz/select_item']
+      this.insert_item(item)
     },
 
     disableItem() {
@@ -140,18 +168,8 @@ export default {
       })
     },
 
-    deleteItem() {
-      this.$store.commit('menuz_select_item_delete')
-    },
-
     onSave() {
-      this.$store.commit('menuz_select_item_update', {
-          name: this.$store.state.itemeditor.name,
-          icon: this.$store.state.itemeditor.icon,
-          filter: this.$store.state.itemeditor.filter,
-          exec: this.$store.state.itemeditor.exec,
-          param: this.$store.state.itemeditor.param,
-      })
+      this.$store.commit('menuz/save_edit_item')
     },
 
     onExpand(info) {

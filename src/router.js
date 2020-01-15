@@ -14,31 +14,31 @@ const navmenu = [
     {
         name: '热键',
         icon: 'down-square',
-        // path: '/vimd',
+        path: '/vimd',
         component: () => import('./views/Menuz.vue') 
     },
     {
         name: '手势',
         icon: TheMouseIcon,
-        // path: '/gesturez',
+        path: '/gesturez',
         component: () => import('./views/Menuz.vue') 
     },
     {
         name: '变量',
         icon: 'thunderbolt',
-        // path: '/var',
+        path: '/var',
         component: () => import('./views/Menuz.vue') 
     },
     {
         name: '插件',
         icon: 'appstore',
-        // path: '/plugin',
+        path: '/plugin',
         component: () => import('./views/Menuz.vue') 
     },
     {
         name: '设置',
         icon: 'setting',
-        // path: '/setting',
+        path: '/setting',
         component: () => import('./views/Menuz.vue') 
     },
 ]

@@ -3,7 +3,7 @@ module.exports = {
         port: 5211,
         proxy: {
             '/+': {
-                target: 'http://127.0.0.1:5210'
+                target: 'http://192.168.56.101:5210'
             }
         }
     },

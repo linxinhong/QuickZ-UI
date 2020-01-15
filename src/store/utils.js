@@ -11,9 +11,8 @@ function walk_by_mark(menu, mark, callback) {
     var existPos = 0
     pos_list.forEach((pos, index) => {
         parentMenu = existMenu
-        pos = Number(pos)
-        existPos = pos > ( existMenu.length - 1 ) ? ( existMenu.length - 1) : pos
-        existMenu = existMenu[existPos]
+        existPos = Number(pos)
+        existMenu = parentMenu[existPos < parentMenu.length ? existPos : parentMenu.length - 1]
         if (existMenu.hasOwnProperty('sub') && index < pos_list.length - 1) {
             existMenu = existMenu.sub
         }
@@ -21,77 +20,53 @@ function walk_by_mark(menu, mark, callback) {
     callback(existMenu, parentMenu, existPos)
 }
 
-function IconStringFormat(iconString) {
-    var p_filepath
-    var p_number
-    var found = iconString.match(/:(\d+)$/)
-    if (found) {
-        p_filepath = iconString.substring(0, found.index)
-        p_number = iconString.substring(found.index + 1)
-    }
-    else {
-        // p_filepath = iconString.replace(/:$/)
-        p_filepath = iconString
-        p_number = 0
-    }
-    var params = qs.stringify({
-        filepath: p_filepath,
-        number: p_number
+function copy_list (list, callback) {
+    const newList = []
+    list.forEach((item, index) => {
+        var newItem = {}
+        const keys = Object.keys(item)
+        for (var i in keys) {
+            newItem[keys[i]] = item[keys[i]]
+        }
+        newItem = callback(newItem)
+        if (newItem.hasOwnProperty('sub')) {
+            newItem.sub = copy_list(newItem.sub, callback)
+        }
+        newList[index] = newItem
     })
-    return params
+    return newList
 }
 
-function getIconFromString(iconString) {
-    return api.generateicon + '?' + IconStringFormat(iconString)
-}
-
-function copy_to_item (item, newItem) {
-    let list = ['name', 'icon', 'filter', 'exec', 'param', 'sep', 'disable']
-    list.forEach(key=> {
-        newItem[key] = item[key]
+function icon_to_request (url, icon) {
+    const found = icon.match(/:(\d+)$/)
+    const iconurl = url + '?' + qs.stringify({
+        filepath: found ? icon.substring(0, found.index) : icon,
+        number: found ? icon.substring(found.index + 1) : 0
     })
-    if (item.hasOwnProperty('sub')) {
-        newItem['sub'] = []
-        item.sub.forEach(subitem => {
-            newItem['sub'].push(replaceIcon(subitem))
-        })
-    }
+    return iconurl
 }
 
-function replaceIcon(item) {
-    let iconurl = ''
-    let newItem = {}
-    copy_to_item(item, newItem)
-    if (item.hasOwnProperty('icon')) {
-        if (item.icon.length > 0) {
-            iconurl = getIconFromString(item.icon)
-        } 
-    }
-    newItem.icon = (iconurl.length > 0) ? function (props, h) {
+function replace_icon (icon) {
+    return (icon.length > 0) ? function (props, h) {
         return h('img', {
             attrs: {
                 width: '16px',
                 height: '16px',
-                src: iconurl
+                src: icon_to_request(api.generateicon, icon) 
             },
             class: [
                 'anticon',
             ],
-            style: {
-            },
-        })
+            style: {}
+        }) 
     } : function (props, h) {
-        return h('div', {
-
-        })
+        return h('div', {})
     }
-    return newItem
 }
 
 export {
-    replaceIcon,
+    replace_icon,
+    icon_to_request,
     walk_by_mark,
-    getIconFromString,
-    IconStringFormat,
-    copy_to_item,
+    copy_list,
 }
